@@ -30,6 +30,17 @@ void MyPrimitive::AddQuad(vector3 a_vBottomLeft, vector3 a_vBottomRight, vector3
 	AddVertexPosition(a_vBottomRight);
 	AddVertexPosition(a_vTopRight);
 }
+//C
+//|\
+//| \
+//A--B
+//This will make the triang A->B->C
+void MyPrimitive::AddTri(vector3 a_vBottomLeft, vector3 a_vBottomRight, vector3 a_vTop)
+{
+	AddVertexPosition(a_vBottomLeft);
+	AddVertexPosition(a_vBottomRight);
+	AddVertexPosition(a_vTop);
+}
 void MyPrimitive::GeneratePlane(float a_fSize, vector3 a_v3Color)
 {
 	if (a_fSize < 0.01f)
@@ -110,17 +121,21 @@ void MyPrimitive::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivis
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
 
-	AddQuad(point0, point1, point3, point2);
-
+	//Create points
+	vector3 peak(0.0f, a_fHeight/2, 0.0f);
+	vector3 baseCenter(0.0f, -a_fHeight/2, 0.0f);
+	std::vector<vector3> baseRing(a_nSubdivisions);
+	for (int i = 0; i < a_nSubdivisions; i += 1)
+	{
+		baseRing[i] = vector3(a_fRadius*cos(i*2.0f*PI / a_nSubdivisions), -a_fHeight/2, a_fRadius*sin(i*2.0f*PI / a_nSubdivisions));
+	}
+	//Connect points
+	for (int i = 0; i < a_nSubdivisions; i += 1)
+	{
+		AddTri(baseCenter, baseRing[i], baseRing[(i+1)%a_nSubdivisions]);
+		AddTri(peak, baseRing[(i + 1) % a_nSubdivisions], baseRing[i]);
+	}
 	//Your code ends here
 	CompileObject(a_v3Color);
 }
@@ -135,16 +150,25 @@ void MyPrimitive::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubd
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
 
-	AddQuad(point0, point1, point3, point2);
+	//Create points
+	vector3 lowCenter(0.0f, -a_fHeight/2, 0.0f);
+	std::vector<vector3> lowRing(a_nSubdivisions);
+	vector3 highCenter(0.0f, a_fHeight/2, 0.0f);
+	std::vector<vector3> highRing(a_nSubdivisions);
+	for (int i = 0; i < a_nSubdivisions; i += 1)
+	{
+		lowRing[i] = vector3(a_fRadius*cos(i*2.0f*PI / a_nSubdivisions), -a_fHeight/2, a_fRadius*sin(i*2.0f*PI / a_nSubdivisions));
+		highRing[i] = lowRing[i] + vector3(0.0f, a_fHeight, 0.0f);
+	}
+
+	//Connect Points
+	for (int i = 0; i < a_nSubdivisions; i += 1)
+	{
+		AddTri(lowCenter, lowRing[i], lowRing[(i + 1) % a_nSubdivisions]);
+		AddQuad(highRing[i], highRing[(i + 1) % a_nSubdivisions], lowRing[i], lowRing[(i + 1) % a_nSubdivisions]);
+		AddTri(highCenter, highRing[(i + 1) % a_nSubdivisions], highRing[i]);
+	}
 
 	//Your code ends here
 	CompileObject(a_v3Color);
@@ -157,22 +181,34 @@ void MyPrimitive::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float
 		a_nSubdivisions = 360;
 
 	Release();
-	Init();
+Init();
 
-	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
+//Your code starts here
+//Create points
+std::vector<vector3> lowInner(a_nSubdivisions);
+std::vector<vector3> lowOuter(a_nSubdivisions);
+std::vector<vector3> highInner(a_nSubdivisions);
+std::vector<vector3> highOuter(a_nSubdivisions);
+for (int i = 0; i < a_nSubdivisions; i += 1)
+{
+	lowInner[i] = vector3(a_fInnerRadius*cos(i*2.0f*PI / a_nSubdivisions), -a_fHeight / 2, a_fInnerRadius*sin(i*2.0f*PI / a_nSubdivisions));
+	lowOuter[i] = vector3(a_fOuterRadius*cos(i*2.0f*PI / a_nSubdivisions), -a_fHeight / 2, a_fOuterRadius*sin(i*2.0f*PI / a_nSubdivisions));
 
-	AddQuad(point0, point1, point3, point2);
+	highInner[i] = lowInner[i] + vector3(0.0f, a_fHeight, 0.0f);
+	highOuter[i] = lowOuter[i] + vector3(0.0f, a_fHeight, 0.0f);
+}
 
-	//Your code ends here
-	CompileObject(a_v3Color);
+//Connect Points
+for (int i = 0; i < a_nSubdivisions; i += 1)
+{
+	AddQuad(highOuter[i], highOuter[(i + 1) % a_nSubdivisions], lowOuter[i], lowOuter[(i + 1) % a_nSubdivisions]);
+	AddQuad(lowOuter[i], lowOuter[(i + 1) % a_nSubdivisions], lowInner[i], lowInner[(i + 1) % a_nSubdivisions]);
+	AddQuad(lowInner[i], lowInner[(i + 1) % a_nSubdivisions], highInner[i], highInner[(i + 1) % a_nSubdivisions]);
+	AddQuad(highInner[i], highInner[(i + 1) % a_nSubdivisions], highOuter[i], highOuter[(i + 1) % a_nSubdivisions]);
+}
+
+//Your code ends here
+CompileObject(a_v3Color);
 }
 void MyPrimitive::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int a_nSubdivisionsA, int a_nSubdivisionsB, vector3 a_v3Color)
 {
@@ -193,17 +229,32 @@ void MyPrimitive::GenerateTorus(float a_fOuterRadius, float a_fInnerRadius, int 
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
 
-	AddQuad(point0, point1, point3, point2);
+	float torusThickness = (a_fOuterRadius - a_fInnerRadius) / 2;
+	float torusRadius = (a_fOuterRadius + a_fInnerRadius) / 2;
 
+	std::vector<std::vector<vector3>> rings(a_nSubdivisionsB);
+
+	for (int i = 0; i < a_nSubdivisionsB; i += 1)
+	{
+		//make ring
+		rings[i] = std::vector<vector3>(a_nSubdivisionsA);
+		for (int j = 0; j < a_nSubdivisionsA; j += 1)
+		{
+			rings[i][j] = vector3(torusRadius + torusThickness*cos((j + 1)*2.f*PI / a_nSubdivisionsA), torusThickness*sin((j + 1)*2.f*PI / a_nSubdivisionsA), 0.0f);
+			rings[i][j] = glm::rotateY(rings[i][j], (float)(i*360.f / a_nSubdivisionsB));
+		}
+	}
+
+	//connect points
+
+	for (int i = 0; i < a_nSubdivisionsB; i += 1)
+	{
+		for (int j = 0; j < a_nSubdivisionsA; j += 1)
+		{
+			AddQuad(rings[i][j], rings[(i + 1) % a_nSubdivisionsB][j], rings[i][(j + 1) % a_nSubdivisionsA], rings[(i + 1) % a_nSubdivisionsB][(j + 1) % a_nSubdivisionsA]);
+		}
+	}
 	//Your code ends here
 	CompileObject(a_v3Color);
 }
@@ -222,16 +273,36 @@ void MyPrimitive::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a
 	Init();
 
 	//Your code starts here
-	float fValue = 0.5f;
-	//3--2
-	//|  |
-	//0--1
-	vector3 point0(-fValue, -fValue, fValue); //0
-	vector3 point1(fValue, -fValue, fValue); //1
-	vector3 point2(fValue, fValue, fValue); //2
-	vector3 point3(-fValue, fValue, fValue); //3
 
-	AddQuad(point0, point1, point3, point2);
+	//create points
+	vector3 peak = vector3(0.0f, a_fRadius, 0.0f);
+	vector3 antiPeak = vector3(0.0f, -a_fRadius, 0.0f);
+	int halfRingCount = 1 << (a_nSubdivisions+1);
+	int partitions = (1 << a_nSubdivisions);
+	std::vector<std::vector<vector3>> rings(halfRingCount);
+
+	for (int i = 0; i < halfRingCount; i += 1)
+	{
+		//make ring
+		rings[i] = std::vector<vector3>(partitions-1);
+		for (int j = 0; j < partitions-1; j += 1)
+		{
+			rings[i][j] = vector3( a_fRadius*cos(-PI / 2.f + (j + 1)*PI / partitions), a_fRadius*sin(-PI / 2.f + (j + 1)*PI / partitions), 0.0f);
+			rings[i][j] = glm::rotateY(rings[i][j], (float)(i*360.f / halfRingCount));
+		}
+	}
+
+	//connect points
+
+	for (int i = 0; i < halfRingCount; i += 1)
+	{
+		AddTri( rings[i][0], antiPeak, rings[(i + 1) % halfRingCount][0]);
+		for (int j = 0; j < partitions-2; j += 1)
+		{
+			AddQuad(rings[i][j],rings[(i + 1) % halfRingCount][j], rings[i][(j + 1)], rings[(i + 1) % halfRingCount][(j + 1)]);
+		}
+		AddTri(peak, rings[i][partitions - 2], rings[(i + 1) % halfRingCount][partitions - 2]);
+	}
 
 	//Your code ends here
 	CompileObject(a_v3Color);
