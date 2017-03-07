@@ -32,11 +32,35 @@ void AppClass::Update(void)
 
 	//cumulative time
 	static double fRunTime = 0.0f; //How much time has passed since the program started
-	fRunTime += fTimeSpan; 
+	fRunTime += fTimeSpan;
 #pragma endregion
 
 #pragma region Your Code goes here
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "WallEye");
+	
+	static vector3 points[11] =
+	{
+		points[0] = vector3(-4.0f, -2.0f, 5.0f),
+		points[1] = vector3(1.0f, -2.0f, 5.0f),
+		points[2] = vector3(-3.0f, -1.0f, 3.0f),
+		points[3] = vector3(2.0f, -1.0f, 3.0f),
+		points[4] = vector3(-2.0f, 0.0f, 0.0f),
+		points[5] = vector3(3.0f, 0.0f, 0.0f),
+		points[6] = vector3(-1.0f, 1.0f, -3.0f),
+		points[7] = vector3(4.0f, 1.0f, -3.0f),
+		points[8] = vector3(0.0f, 2.0f, -5.0f),
+		points[9] = vector3(5.0f, 2.0f, -5.0f),
+		points[10] = vector3(1.0f, 3.0f, -5.0f)
+	};
+	int currStartPoint = (int)(fRunTime / fDuration) % 11;
+	float pointInLerp = (fRunTime / fDuration) - (int)(fRunTime / fDuration);
+
+	matrix4 currentPos = glm::translate(glm::lerp(points[currStartPoint], points[(currStartPoint + 1) % 11], pointInLerp));
+	for (int i = 0; i < 11; i++)
+	{
+		matrix4 spherePos = glm::translate(points[i])*glm::scale(vector3(0.1f));
+		m_pMeshMngr->AddSphereToRenderList(spherePos, RERED, SOLID);
+	}
+	m_pMeshMngr->SetModelMatrix(currentPos, "WallEye");
 #pragma endregion
 
 #pragma region Does not need changes but feel free to change anything here
