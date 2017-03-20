@@ -26,12 +26,15 @@ void AppClass::Update(void)
 		CameraRotation();
 
 	//Rotation matrices
-	matrix4 rotX = glm::rotate(IDENTITY_M4, m_v3Orientation.x, REAXISX);
-	matrix4 rotY = glm::rotate(IDENTITY_M4, m_v3Orientation.y, REAXISY);
-	matrix4 rotZ = glm::rotate(IDENTITY_M4, m_v3Orientation.z, REAXISZ);
-
 	//linear combination
-	m_mToWorld = rotX * rotY * rotZ;
+	
+	static vector3 lastOrientations(0, 0, 0);
+
+
+	quaternion rot = quaternion(vector3(glm::radians(m_v3Orientation.x-lastOrientations.x), glm::radians(m_v3Orientation.y - lastOrientations.y), glm::radians(m_v3Orientation.z - lastOrientations.z)));
+	m_mToWorld = m_mToWorld*glm::toMat4(rot);
+
+	lastOrientations = vector3(m_v3Orientation.x, m_v3Orientation.y, m_v3Orientation.z);
 
 	//Setting the model matrix
 	m_pMeshMngr->SetModelMatrix(m_mToWorld, "Steve");
