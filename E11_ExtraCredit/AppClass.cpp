@@ -28,6 +28,8 @@ void AppClass::Update(void)
 	//translate
 	m_m4Steve = glm::translate(m_m4Steve, vector3(0.f, reverse?5.f-(float)dTotalTime:(float)dTotalTime, 0.f));
 
+	//spin
+	m_m4Steve = glm::rotate(m_m4Steve, (float)dTotalTime*360.f, 0.f, 1.f, 0.f);
 
 #pragma endregion
 #pragma region DOES NOT NEED CHANGES
