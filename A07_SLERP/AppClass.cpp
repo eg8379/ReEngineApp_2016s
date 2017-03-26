@@ -1,7 +1,7 @@
 #include "AppClass.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("SLERP - YOUR USER NAME GOES HERE"); // Window Name
+	super::InitWindow("SLERP - ERIC GLADYSZ"); // Window Name
 
 	//Setting the color to black
 	m_v4ClearColor = vector4(0.0f);
@@ -43,14 +43,40 @@ void AppClass::Update(void)
 	fRunTime += fCallTime;
 
 	//Earth Orbit
-	double fEarthHalfOrbTime = 182.5f * m_fDay; //Earths orbit around the sun lasts 365 days / half the time for 2 stops
+	float fEarthHalfOrbTime = 182.5f * m_fDay; //Earths orbit around the sun lasts 365 days / half the time for 2 stops
 	float fEarthHalfRevTime = 0.5f * m_fDay; // Move for Half a day
 	float fMoonHalfOrbTime = 14.0f * m_fDay; //Moon's orbit is 28 earth days, so half the time for half a route
 
 	//Setting the matrices
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Sun");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Earth");
-	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "Moon");
+	glm::quat quatStart = glm::quat(vector3(0.0f, 0.0f, 0.0f));
+	glm::quat quatEnd = glm::quat(vector3(0.0f, 180.f, 0.0f));
+
+
+	static matrix4 m4_sun = glm::scale(IDENTITY_M4, vector3(5.936f));
+	float corredtedDirection = (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ? -.01f : .01f);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+		m4_sun = glm::translate(m4_sun, vector3(corredtedDirection, 0.0f, 0.0f));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
+		m4_sun = glm::translate(m4_sun, vector3(0.0f, corredtedDirection, 0.0f));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+		m4_sun = glm::translate(m4_sun, vector3(0.0f, 0.0f, corredtedDirection));
+
+	matrix4 earthOrbit = glm::mat4_cast(glm::mix(quatStart, quatEnd, (float)(fRunTime) / fEarthHalfOrbTime));
+	matrix4 earthSpin = glm::mat4_cast(glm::mix(quatStart, quatEnd, (float)(fRunTime) / fEarthHalfRevTime));
+	matrix4 m4_earth = m4_sun*glm::scale(IDENTITY_M4, vector3(1.f/5.936f))*earthOrbit*glm::translate(11.f, 0.f, 0.f)*glm::transpose(earthOrbit)*earthSpin*glm::scale(IDENTITY_M4, vector3(0.524f));
+
+	
+	matrix4 moonOrbit = glm::mat4_cast(glm::mix(quatStart, quatEnd, (float)(fRunTime) / fMoonHalfOrbTime));
+	matrix4 m4_moon = m4_earth*glm::transpose(earthSpin)*moonOrbit*glm::translate(2.f, 0.f, 0.f)*glm::scale(IDENTITY_M4, vector3(0.27));
+	//glm::mix(earthOrbitStart, earthOrbitEnd, m_fDay/fEarthHalfOrbTime);
+
+	
+
+	m_pMeshMngr->SetModelMatrix(m4_sun, "Sun");
+	m_pMeshMngr->SetModelMatrix(m4_earth, "Earth");
+	m_pMeshMngr->SetModelMatrix(m4_moon, "Moon");
+
 
 	//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
@@ -58,6 +84,10 @@ void AppClass::Update(void)
 	static int nEarthOrbits = 0;
 	static int nEarthRevolutions = 0;
 	static int nMoonOrbits = 0;
+
+	nEarthOrbits = (int)(((float)(fRunTime) / fEarthHalfOrbTime) / 2);
+	nEarthRevolutions = (int)(((float)(fRunTime) / fEarthHalfRevTime) / 2);
+	nMoonOrbits = (int)(((float)(fRunTime) / fMoonHalfOrbTime) / 2);
 
 	//Indicate the FPS
 	int nFPS = m_pSystem->GetFPS();
@@ -106,7 +136,7 @@ void AppClass::Display(void)
 	}
 	
 	m_pMeshMngr->Render(); //renders the render list
-
+	m_pMeshMngr->ClearRenderList(); //Reset the Render list after render
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
