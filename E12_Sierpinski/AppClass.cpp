@@ -13,21 +13,34 @@ void AppClass::InitVariables(void)
 	m_pMesh = new MyMesh();
 	
 	//Creating the Mesh points
-	m_pMesh->AddVertexPosition(vector3(-1.0f, -1.0f, 0.0f));
+	m_pMesh->AddVertexPosition(vector3(0.0f, 1.0f, 0.0f));
 	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3( 1.0f, -1.0f, 0.0f));
-	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
-	m_pMesh->AddVertexColor(RERED);
-	m_pMesh->AddVertexPosition(vector3(-1.0f,  1.0f, 0.0f));
-	m_pMesh->AddVertexColor(REBLUE);
-	m_pMesh->AddVertexPosition(vector3(1.0f, -1.0f, 0.0f));
-	m_pMesh->AddVertexColor(REBLUE);
-	m_pMesh->AddVertexPosition(vector3( 1.0f, 1.0f, 0.0f));
+	m_pMesh->AddVertexPosition(glm::rotateZ(vector3( 0.0f, 1.0f, 0.0f),120.f));
+	m_pMesh->AddVertexColor(REGREEN);
+	m_pMesh->AddVertexPosition(glm::rotateZ(vector3(0.0f, 1.0f, 0.0f), 240.f));
 	m_pMesh->AddVertexColor(REBLUE);
 
 	//Compiling the mesh
 	m_pMesh->CompileOpenGL3X();
+	unsigned int depth = 12;
+	m_nObjects = pow(3, depth-1);
+	m_fMatrixArray = new float[m_nObjects * 16];
+	for (int nObject = 0; nObject < m_nObjects; nObject++)
+	{
+		vector3 basePos(0.f, 1.f, 0.f);
+		vector3 truePos(0.f);
+		int obj = nObject;
+		for (int i = 0; i < depth; i++)
+		{
+			truePos += (glm::rotateZ(basePos, (obj%3)*120.f)*(float)pow(1.f / 2.f, i));
+			obj /= 3;
+		}
+		const float* m4MVP = glm::value_ptr(
+			glm::translate(truePos) *
+			glm::scale(IDENTITY_M4, vector3(pow(1.f / 2.f, depth-2)))
+		);
+		memcpy(&m_fMatrixArray[nObject * 16], m4MVP, 16 * sizeof(float));
+	}
 }
 
 void AppClass::Update(void)
@@ -65,7 +78,7 @@ void AppClass::Display(void)
 	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
 	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
 
-	m_pMesh->Render(m4Projection, m4View, IDENTITY_M4);//Rendering nObject(s)											   //clear the screen
+	m_pMesh->RenderList(m4Projection, m4View, m_fMatrixArray, m_nObjects);//Rendering nObject(s)
 	
 	m_pMeshMngr->Render(); //renders the render list
 	m_pMeshMngr->ClearRenderList(); //Reset the Render list after render
