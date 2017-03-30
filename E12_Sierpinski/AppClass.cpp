@@ -22,22 +22,24 @@ void AppClass::InitVariables(void)
 
 	//Compiling the mesh
 	m_pMesh->CompileOpenGL3X();
-	unsigned int depth = 12;
-	m_nObjects = pow(3, depth-1);
+	float scale = 1.f;
+	unsigned int depth = 0;
+	m_nObjects = pow(3, depth);
 	m_fMatrixArray = new float[m_nObjects * 16];
-	for (int nObject = 0; nObject < m_nObjects; nObject++)
+
+	for (unsigned int nObject = 0; nObject < m_nObjects; nObject++)
 	{
-		vector3 basePos(0.f, 1.f, 0.f);
+		vector3 basePos(0.f, scale, 0.f);
 		vector3 truePos(0.f);
-		int obj = nObject;
-		for (int i = 0; i < depth; i++)
+		unsigned int obj = nObject;
+		for (unsigned int i = 0; i <= depth; i++)
 		{
 			truePos += (glm::rotateZ(basePos, (obj%3)*120.f)*(float)pow(1.f / 2.f, i));
 			obj /= 3;
 		}
 		const float* m4MVP = glm::value_ptr(
 			glm::translate(truePos) *
-			glm::scale(IDENTITY_M4, vector3(pow(1.f / 2.f, depth-2)))
+			glm::scale(IDENTITY_M4, vector3(scale*pow(1 / 2.f, depth==0?0:depth-1)))
 		);
 		memcpy(&m_fMatrixArray[nObject * 16], m4MVP, 16 * sizeof(float));
 	}
