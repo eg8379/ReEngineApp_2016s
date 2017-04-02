@@ -14,7 +14,15 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region YOUR CODE GOES HERE
-	modelMatrix = IDENTITY_M4;
+	if (fTimer > 2.5f)
+	{
+		fTimer -= 2.5f;
+	}
+	quaternion zero(vector3(0.f, 0.f, 0.f));
+	quaternion full(vector3(0.f, 0.f, glm::radians(180.f)));
+	matrix4 rotation = glm::toMat4(glm::mix(zero, full, 2.f*fTimer / 2.5f));
+	matrix4 translation = glm::translate(vector3(0.f, 3.f, 0.f));
+	modelMatrix = rotation*translation*glm::transpose(rotation);
 #pragma endregion
 
 #pragma region DOES NOT NEED CHANGES
