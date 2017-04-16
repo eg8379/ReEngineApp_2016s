@@ -15,10 +15,27 @@ void AppClass::InitVariables(void)
 	m_pMeshMngr->LoadModel("Minecraft\\Zombie.obj", "Zombie");
 	m_pMeshMngr->LoadModel("Minecraft\\Steve.obj", "Steve");
 	m_pMeshMngr->LoadModel("Minecraft\\Cow.obj", "Cow");
+
+	//extra models
+	m_pMeshMngr->LoadModel("Minecraft\\Zombie.obj", "Zombie1");
+	m_pMeshMngr->LoadModel("Minecraft\\Steve.obj", "Steve1");
+	m_pMeshMngr->LoadModel("Minecraft\\Cow.obj", "Cow1");
+	m_pMeshMngr->LoadModel("Minecraft\\Zombie.obj", "Zombie2");
+	m_pMeshMngr->LoadModel("Minecraft\\Steve.obj", "Steve2");
+	m_pMeshMngr->LoadModel("Minecraft\\Cow.obj", "Cow2");
+
 	//creating bounding spheres for both models
 	m_pBS0 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Zombie"));
 	m_pBS1 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Steve"));
 	m_pBS2 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Cow"));
+	
+	//setting bounding box 
+	m_pBS3 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Zombie1"));
+	m_pBS4 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Steve1"));
+	m_pBS5 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Cow1"));
+	m_pBS6 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Zombie2"));
+	m_pBS7 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Steve2"));
+	m_pBS8 = new MyBoundingBoxClass(m_pMeshMngr->GetVertexList("Cow2"));
 
 	matrix4 m4Position = glm::translate(vector3(3.0, 0.0, 0.0));
 	m_pMeshMngr->SetModelMatrix(m4Position, "Steve");
@@ -67,9 +84,38 @@ void AppClass::Update(void)
 	m_pBS2->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Cow"));
 	m_pBS2->RenderSphere();
 
+	//extra models matrices 
+	m_pBS3->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Zombie1"));
+	m_pBS3->RenderSphere();
+
+	m_pBS4->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Steve1"));
+	m_pBS4->RenderSphere();
+
+	m_pBS5->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Cow1"));
+	m_pBS5->RenderSphere();
+
+	m_pBS6->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Zombie2"));
+	m_pBS6->RenderSphere();
+
+	m_pBS7->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Steve2"));
+	m_pBS7->RenderSphere();
+
+	m_pBS8->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Cow2"));
+	m_pBS8->RenderSphere();
+
 	m_pBS0->SetColliding(false);
 	m_pBS1->SetColliding(false);
 	m_pBS2->SetColliding(false);
+
+	//extra models collison
+	m_pBS3->SetColliding(false);
+	m_pBS4->SetColliding(false);
+	m_pBS5->SetColliding(false);
+	m_pBS6->SetColliding(false);
+	m_pBS7->SetColliding(false);
+	m_pBS8->SetColliding(false);
+
+
 
 	if (m_pBS0->IsColliding(m_pBS1))
 	{
@@ -86,6 +132,8 @@ void AppClass::Update(void)
 		m_pBS1->SetColliding(true);
 		m_pBS2->SetColliding(true);
 	}
+	
+
 
 	if (fPercentage > 1.0f)
 	{
@@ -135,5 +183,11 @@ void AppClass::Release(void)
 	SafeDelete(m_pBS0);
 	SafeDelete(m_pBS1);
 	SafeDelete(m_pBS2);
+	SafeDelete(m_pBS3);
+	SafeDelete(m_pBS4);
+	SafeDelete(m_pBS5);
+	SafeDelete(m_pBS6);
+	SafeDelete(m_pBS7);
+	SafeDelete(m_pBS8);
 	super::Release(); //release the memory of the inherited fields
 }
