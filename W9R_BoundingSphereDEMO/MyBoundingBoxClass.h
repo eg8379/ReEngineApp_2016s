@@ -4,6 +4,8 @@
 class MyBoundingBoxClass
 {
 private:
+	bool m_bOrientable = true;
+	MyBoundingBoxClass* m_pNonAligned = nullptr;
 	float m_fRadius = 0.0f; //radius of the sphere
 	vector3 m_v3CenterLocal = vector3(0.0f); //center of the sphere in local space
 	vector3 m_v3CenterGlobal = vector3(0.0f); //center of the sphere in global space
@@ -37,6 +39,10 @@ public:
 	void SetRadius(float input);
 
 	/*
+	Gets Box verticies
+	*/
+	std::vector<vector3> GetVerticies(void);
+	/*
 	Gets Colliding
 	*/
 	bool GetColliding(void);
@@ -60,7 +66,10 @@ public:
 	/*
 	Constructor, needs a vertex list
 	*/
-	MyBoundingBoxClass(std::vector<vector3> vertexList);
+	MyBoundingBoxClass(std::vector<vector3> vertexList, bool orientable = true);
+	~MyBoundingBoxClass() {
+		if (m_pNonAligned != nullptr) delete m_pNonAligned;
+	}
 	/*
 	Renders the sphere based on the radius and the center in global space
 	*/
