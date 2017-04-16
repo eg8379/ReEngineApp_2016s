@@ -30,6 +30,9 @@
     <ClCompile Include="MyBoundingBoxClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MyBoundingObjectClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppClass.h">
@@ -47,9 +50,12 @@
     <ClInclude Include="MyBoundingObjectClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="BoManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+=======
+>>>>>>> origin/working
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\BTO.rc">

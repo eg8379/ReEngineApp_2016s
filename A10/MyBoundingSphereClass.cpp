@@ -49,16 +49,6 @@ MyBoundingSphereClass::MyBoundingSphereClass(std::vector<vector3> vertexList)
 	m_pMeshMngr = MeshManagerSingleton::GetInstance();
 }
 
-void MyBoundingSphereClass::RenderSphere()
-{
-	vector3 v3Color = REGREEN;
-	if (true == m_bColliding)
-		v3Color = RERED;
-
-	m_pMeshMngr->AddSphereToRenderList(
-		glm::translate(m_v3CenterGlobal) *
-		glm::scale(vector3(m_fRadius) * 2.0f), v3Color, WIRE);
-}
 void MyBoundingSphereClass::SetModelMatrix(matrix4 a_m4ToWorld)
 {
 	if (m_m4ToWorld == a_m4ToWorld)
@@ -75,11 +65,9 @@ bool MyBoundingSphereClass::IsColliding(MyBoundingSphereClass* a_other)
 	return fDistance < fRadiiSum;
 }
 
-void MyBoundingSphereClass::SetColliding(bool input) { m_bColliding = input; }
 void MyBoundingSphereClass::SetCenterLocal(vector3 input) { m_v3CenterLocal = input; }
 void MyBoundingSphereClass::SetCenterGlobal(vector3 input) { m_v3CenterGlobal = input; }
 void MyBoundingSphereClass::SetRadius(float input) { m_fRadius = input; }
-bool MyBoundingSphereClass::GetColliding(void) { return m_bColliding; }
 vector3 MyBoundingSphereClass::GetCenterLocal(void) { return m_v3CenterLocal; }
 vector3 MyBoundingSphereClass::GetCenterGlobal(void) { return m_v3CenterGlobal; }
 float MyBoundingSphereClass::GetRadius(void) { return m_fRadius; }
