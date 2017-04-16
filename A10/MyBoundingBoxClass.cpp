@@ -1,9 +1,18 @@
 #include "MyBoundingBoxClass.h"
 
+vector3 MyBoundingBoxClass::GetGlobalMax()
+{
+	return m_v3MaxG;
+}
+
+vector3 MyBoundingBoxClass::GetGlobalMin()
+{
+	return m_v3MinG;
+}
+
 MyBoundingBoxClass::MyBoundingBoxClass(std::vector<vector3> vertexList, bool orientable)
 {
 	m_bOrientable = orientable;
-	m_bColliding = false;
 	m_fRadius = 0.0f;
 	m_v3CenterGlobal = vector3(0.0f);
 
@@ -54,25 +63,8 @@ MyBoundingBoxClass::MyBoundingBoxClass(std::vector<vector3> vertexList, bool ori
 	{
 		m_pNonAligned = new MyBoundingBoxClass(GetVerticies(), false);
 	}
-	//m_v3Size.x = glm::distance(vector3(m_v3Min.x, 0.0, 0.0), vector3(m_v3Max.x, 0.0, 0.0));
-	//m_v3Size.y = glm::distance(vector3(0.0, m_v3Min.y, 0.0), vector3(0.0, m_v3Max.y, 0.0));
-	//m_v3Size.z = glm::distance(vector3(0.0, 0.0, m_v3Min.z), vector3(0.0, 0.0, m_v3Max.z));
 }
 
-void MyBoundingBoxClass::RenderSphere()
-{
-	vector3 v3Color = REGREEN;
-	if (true == m_bColliding)
-		v3Color = RERED;
-
-	m_pMeshMngr->AddCubeToRenderList(
-		m_m4ToWorld *
-		glm::translate(m_v3CenterLocal) *
-		glm::scale(m_v3Size),
-		v3Color, WIRE);
-
-	if (m_pNonAligned != nullptr) m_pNonAligned->RenderSphere();
-}
 void MyBoundingBoxClass::SetModelMatrix(matrix4 a_m4ToWorld)
 {
 	if (!m_bOrientable || m_m4ToWorld == a_m4ToWorld)
@@ -85,7 +77,6 @@ void MyBoundingBoxClass::SetModelMatrix(matrix4 a_m4ToWorld)
 	
 	if (m_pNonAligned != nullptr) delete m_pNonAligned;
 	m_pNonAligned = new MyBoundingBoxClass(GetVerticies(), false);
-	m_pNonAligned->SetColliding(m_bColliding);
 }
 
 bool MyBoundingBoxClass::IsColliding(MyBoundingBoxClass* a_other)
@@ -111,13 +102,6 @@ bool MyBoundingBoxClass::IsColliding(MyBoundingBoxClass* a_other)
 	return true;
 }
 
-void MyBoundingBoxClass::SetColliding(bool input) { 
-	m_bColliding = input;
-	if (m_bOrientable) m_pNonAligned->SetColliding(input);
-}
-void MyBoundingBoxClass::SetCenterLocal(vector3 input) { m_v3CenterLocal = input; }
-void MyBoundingBoxClass::SetCenterGlobal(vector3 input) { m_v3CenterGlobal = input; }
-void MyBoundingBoxClass::SetRadius(float input) { m_fRadius = input; }
 std::vector<vector3> MyBoundingBoxClass::GetVerticies(void)
 {
 	std::vector<vector3> points;
@@ -128,8 +112,3 @@ std::vector<vector3> MyBoundingBoxClass::GetVerticies(void)
 	}
 	return points;
 }
-bool MyBoundingBoxClass::GetColliding(void) { return m_bColliding; }
-vector3 MyBoundingBoxClass::GetCenterLocal(void) { return m_v3CenterLocal; }
-vector3 MyBoundingBoxClass::GetCenterGlobal(void) { return m_v3CenterGlobal; }
-float MyBoundingBoxClass::GetRadius(void) { return m_fRadius; }
-matrix4 MyBoundingBoxClass::GetModelMatrix(void) { return m_m4ToWorld; }

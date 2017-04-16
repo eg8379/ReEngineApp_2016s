@@ -24,11 +24,13 @@ private:
 	vector3 m_HitColor = RERED;
 	bool m_Visible = true;
 
-	vector3 m_LocalCenter;
-	vector3 m_GlobalCenter;
-	matrix4 m_WorldTransform;
-	bool m_Colliding;
-	
+	bool m_Colliding = false;
+
+	vector3 m_LocalCenter = vector3(0.f);
+	vector3 m_GlobalCenter = vector3(0.f);
+	matrix4 m_WorldTransform = IDENTITY_M4;
+
+	MeshManagerSingleton* m_pMeshMngr = nullptr;
 
 public:
 	MyBoundingObjectClass(std::vector<vector3> verticies);
@@ -49,10 +51,13 @@ public:
 	void SetCollidingColor(vector3 rgb);
 	vector3 GetCollidingColor();
 
-	void Render(bool colliding);
+	MyBoundingSphereClass* GetSphere();
+	MyBoundingBoxClass* GetBox();
 
-	void SetColliding();
-	bool IsColliding(MyBoundingObjectClass other);
+	void Render();
+
+	void SetColliding(bool colliding);
+	bool IsColliding(MyBoundingObjectClass* other);
 	
 	
 

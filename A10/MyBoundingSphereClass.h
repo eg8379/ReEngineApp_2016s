@@ -9,12 +9,7 @@ private:
 	vector3 m_v3CenterGlobal = vector3(0.0f); //center of the sphere in global space
 	matrix4 m_m4ToWorld = IDENTITY_M4; //matrix that takes you from local to global space
 	MeshManagerSingleton* m_pMeshMngr = nullptr; //for drawing the sphere
-	bool m_bColliding = false;
 public:
-	/*
-	Sets Colliding
-	*/
-	void SetColliding(bool input);
 	/*
 	Sets Center of the sphere in local space
 	*/
@@ -45,18 +40,9 @@ public:
 	*/
 	matrix4 GetModelMatrix(void);
 	/*
-	Gets radius of the sphere
-	*/
-	float GetRadius(void);
-	
-	/*
 	Constructor, needs a vertex list
 	*/
 	MyBoundingSphereClass(std::vector<vector3> vertexList);
-	/*
-	Renders the sphere based on the radius and the center in global space
-	*/
-	void RenderSphere();
 	/*
 	Sets the transform from the local to world matrix
 	*/
