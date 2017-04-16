@@ -7,8 +7,6 @@ Date: 2015/09 (Last Modified on: 15/11)
 
 #include "RE\ReEngAppClass.h"
 #include <SFML\Graphics.hpp>
-#include "MyBoundingSphereClass.h"
-#include "MyBoundingBoxClass.h"
 #include "BoManager.h"
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
@@ -16,12 +14,8 @@ using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 class AppClass : public ReEngAppClass
 {
 	vector3 m_v3Position;
-	MyBoundingBoxClass* m_pBS0;
-	MyBoundingBoxClass* m_pBS1;
-	MyBoundingBoxClass* m_pBS2;
-
 	//boundingObject
-	BoManager* BoManager::instance = nullptr;
+
 	BoManager* m_boManager;
 
 public:

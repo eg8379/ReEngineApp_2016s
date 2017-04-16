@@ -2,7 +2,6 @@
 
 MyBoundingSphereClass::MyBoundingSphereClass(std::vector<vector3> vertexList)
 {
-	m_bColliding = false;
 	m_fRadius = 0.0f;
 	m_v3CenterGlobal = vector3(0.0f);
 
@@ -70,5 +69,4 @@ void MyBoundingSphereClass::SetCenterGlobal(vector3 input) { m_v3CenterGlobal = 
 void MyBoundingSphereClass::SetRadius(float input) { m_fRadius = input; }
 vector3 MyBoundingSphereClass::GetCenterLocal(void) { return m_v3CenterLocal; }
 vector3 MyBoundingSphereClass::GetCenterGlobal(void) { return m_v3CenterGlobal; }
-float MyBoundingSphereClass::GetRadius(void) { return m_fRadius; }
 matrix4 MyBoundingSphereClass::GetModelMatrix(void) { return m_m4ToWorld; }

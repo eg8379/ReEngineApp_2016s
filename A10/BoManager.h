@@ -19,8 +19,8 @@ private:
 	};
 
 public:
-	std::map<String, MyBoundingObjectClass> m_boMap;
-
+	std::map<String, MyBoundingObjectClass*> m_boMap;
+	MyBoundingObjectClass* m_pBS0 = nullptr;
 	static BoManager* GetInstance() {
 		if (instance == nullptr)
 			instance = new BoManager();
@@ -32,26 +32,10 @@ public:
 			instance = nullptr;
 		}
 	}
-	void addBo(std::vector<vector3> verts, String name)
-	{
-		m_boMap.insert(std::pair<String, MyBoundingObjectClass>(name, MyBoundingObjectClass(verts)));
-	}
-	void checkColls()
-	{
-		for (std::map<String, MyBoundingObjectClass>::iterator bo0 = m_boMap.begin(); bo0 != m_boMap.end(); ++bo0)
-		{
-			for (std::map<String, MyBoundingObjectClass>::iterator bo1 = bo0; bo1 != m_boMap.end(); ++bo1)
-			{
-				if (bo0->second.IsColliding(bo1->second))
-				{
-					bo0->second.SetColliding();
-					bo1->second.SetColliding();
-				}
-			}
-		}
-	}
-	void updateModelMatrix(String name, matrix4 mat)
-	{
-		m_boMap[name].SetModelMatrix(mat);
-	}
+	void addBo(std::vector<vector3> verts, String name);
+	void checkColls();
+	void updateModelMatrix(String name, matrix4 mat);
+	void render();
 };
+
+BoManager* BoManager::instance = nullptr;
