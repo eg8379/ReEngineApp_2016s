@@ -20,7 +20,6 @@ private:
 
 public:
 	std::map<String, MyBoundingObjectClass*> m_boMap;
-	MyBoundingObjectClass* m_pBS0 = nullptr;
 	static BoManager* GetInstance() {
 		if (instance == nullptr)
 			instance = new BoManager();
@@ -37,5 +36,3 @@ public:
 	void updateModelMatrix(String name, matrix4 mat);
 	void render();
 };
-
-BoManager* BoManager::instance = nullptr;

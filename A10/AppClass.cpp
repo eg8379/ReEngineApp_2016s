@@ -28,7 +28,10 @@ void AppClass::InitVariables(void)
 	m_boManager = BoManager::GetInstance();
 
 	//add objects to the manager
-	m_boManager->addBo(m_pMeshMngr->GetVertexList("Zombie"), "Zombie");
+	//m_boManager->addBo(m_pMeshMngr->GetVertexList("Zombie"), "Zombie");
+
+	m_BB0 = new MyBoundingObjectClass(m_pMeshMngr->GetVertexList("Zombie"));
+
 	m_boManager->addBo(m_pMeshMngr->GetVertexList("Steve"), "Steve");
 	m_boManager->addBo(m_pMeshMngr->GetVertexList("Cow"), "Cow");
 }
@@ -64,11 +67,14 @@ void AppClass::Update(void)
 	m_pMeshMngr->SetModelMatrix(m4Transform, "Zombie"); //set the matrix to the model
 
 	//updating the model matricies after all the tranformations 
-	m_boManager->updateModelMatrix("Zombie", m_pMeshMngr->GetModelMatrix("Zombie"));  
+	m_boManager->updateModelMatrix("Zombie", m_pMeshMngr->GetModelMatrix("Zombie")); 
 	m_boManager->updateModelMatrix("Cow", m_pMeshMngr->GetModelMatrix("Cow"));
 	m_boManager->updateModelMatrix("Steve", m_pMeshMngr->GetModelMatrix("Steve"));
-	m_boManager->render();
-	m_boManager->checkColls();
+	//m_boManager->render();
+	//m_boManager->checkColls();
+
+	m_BB0->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Zombie"));
+	m_BB0->Render();
 
 	//m_pBS0->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Zombie"));
 	//m_pBS0->RenderSphere();//render the bounding sphere

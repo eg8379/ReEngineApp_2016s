@@ -15,7 +15,7 @@ class AppClass : public ReEngAppClass
 {
 	vector3 m_v3Position;
 	//boundingObject
-
+	MyBoundingObjectClass* m_BB0;
 	BoManager* m_boManager;
 
 public:

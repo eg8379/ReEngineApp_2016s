@@ -1,12 +1,11 @@
 #pragma once
 #include "BoManager.h"
 
+BoManager* BoManager::instance = nullptr;
 
 void BoManager::addBo(std::vector<vector3> verts, String name)
 {
 	m_boMap.insert(std::pair<String, MyBoundingObjectClass*>(name, new MyBoundingObjectClass(verts)));
-	if (m_pBS0 == nullptr)
-		m_pBS0 = m_boMap[0];
 }
 void BoManager::checkColls()
 {
@@ -28,8 +27,10 @@ void BoManager::checkColls()
 }
 void BoManager::updateModelMatrix(String name, matrix4 mat)
 {
+	if (m_boMap[name] == nullptr)
+		return;
 	m_boMap[name]->SetModelMatrix(mat);
-}
+} 
 void BoManager::render()
 {
 	for (std::map<String, MyBoundingObjectClass*>::iterator bo0 = m_boMap.begin(); bo0 != m_boMap.end(); ++bo0)
