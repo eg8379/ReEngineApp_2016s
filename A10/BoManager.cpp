@@ -30,7 +30,7 @@ void BoManager::updateModelMatrix(String name, matrix4 mat)
 	if (m_boMap[name] == nullptr)
 		return;
 	m_boMap[name]->SetModelMatrix(mat);
-} 
+}
 void BoManager::render()
 {
 	for (std::map<String, MyBoundingObjectClass*>::iterator bo0 = m_boMap.begin(); bo0 != m_boMap.end(); ++bo0)
