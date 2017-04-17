@@ -29,9 +29,6 @@ void AppClass::InitVariables(void)
 
 	//add objects to the manager
 	m_boManager->addBo(m_pMeshMngr->GetVertexList("Zombie"), "Zombie");
-
-	m_BB0 = new MyBoundingObjectClass(m_pMeshMngr->GetVertexList("Zombie"));
-
 	m_boManager->addBo(m_pMeshMngr->GetVertexList("Steve"), "Steve");
 	m_boManager->addBo(m_pMeshMngr->GetVertexList("Cow"), "Cow");
 }
@@ -62,6 +59,7 @@ void AppClass::Update(void)
 	vector3 v3Current = glm::lerp(v3Start, v3End, fPercentage);
 	matrix4 mTranslation = glm::translate(v3Current);
 
+	// Translate steve
 	m_pMeshMngr->SetModelMatrix(mTranslation, "Steve");
 	//set the translate to create the transform matrix
 	matrix4 m4Transform = glm::translate(m_v3Position) * ToMatrix4(m_qArcBall);

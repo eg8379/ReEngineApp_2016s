@@ -66,17 +66,7 @@ void MyBoundingObjectClass::Render()
 	if (m_Colliding)
 		v3Color = m_HitColor;
 
-	/*m_pMeshMngr->AddCubeToRenderList(
-		m_WorldTransform *
-		glm::translate(m_LocalCenter) *
-		glm::scale(GetGlobalBoxMaximum()-GetGlobalBoxMinimum()),
-		v3Color, WIRE);
-
-	m_pMeshMngr->AddSphereToRenderList(
-		m_WorldTransform *
-		glm::translate(m_LocalCenter) *
-		glm::scale(vector3(GetGlobalBoxMaximum() - GetGlobalBoxMinimum())), v3Color, WIRE);*/
-
+	// Render box and sphere
 	m_Box->RenderBox();
 	m_Sphere->RenderSphere();
 }

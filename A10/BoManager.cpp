@@ -5,14 +5,16 @@ BoManager* BoManager::instance = nullptr;
 
 void BoManager::addBo(std::vector<vector3> verts, String name)
 {
+	// Insert new bounding object
 	m_boMap.insert(std::pair<String, MyBoundingObjectClass*>(name, new MyBoundingObjectClass(verts)));
 }
 void BoManager::checkColls()
 {
-	for (std::map<String, MyBoundingObjectClass*>::iterator bo0 = m_boMap.begin(); bo0 != m_boMap.end(); ++bo0)
+	for (std::map<String, MyBoundingObjectClass*>::iterator bo0 = m_boMap.begin(); bo0 != m_boMap.end(); ++bo0) // Reset colls
 	{
 		bo0->second->SetColliding(false);
 	}
+	// Check each obj against each other obj
 	for (std::map<String, MyBoundingObjectClass*>::iterator bo0 = m_boMap.begin(); bo0 != m_boMap.end(); ++bo0)
 	{
 		for (std::map<String, MyBoundingObjectClass*>::iterator bo1 = m_boMap.begin(); bo1 != m_boMap.end(); ++bo1)
