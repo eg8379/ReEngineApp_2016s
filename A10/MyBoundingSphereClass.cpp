@@ -63,7 +63,17 @@ bool MyBoundingSphereClass::IsColliding(MyBoundingSphereClass* a_other)
 	float fRadiiSum = this->m_fRadius + a_other->m_fRadius;
 	return fDistance < fRadiiSum;
 }
+void MyBoundingSphereClass::RenderSphere()
+{
+	vector3 v3Color = REGREEN;
+	if (true == m_isColliding)
+		v3Color = RERED;
 
+	m_pMeshMngr->AddSphereToRenderList(
+		glm::translate(m_v3CenterGlobal) *
+		glm::scale(vector3(m_fRadius) * 2.0f), v3Color, WIRE);
+}
+void MyBoundingSphereClass::SetColliding(bool input) { m_isColliding = input; }
 void MyBoundingSphereClass::SetCenterLocal(vector3 input) { m_v3CenterLocal = input; }
 void MyBoundingSphereClass::SetCenterGlobal(vector3 input) { m_v3CenterGlobal = input; }
 void MyBoundingSphereClass::SetRadius(float input) { m_fRadius = input; }

@@ -9,7 +9,24 @@ vector3 MyBoundingBoxClass::GetGlobalMin()
 {
 	return m_v3MinG;
 }
+void MyBoundingBoxClass::SetColliding(bool input) {
+	m_isColliding = input;
+	if (m_bOrientable) m_pNonAligned->SetColliding(input);
+}
+void MyBoundingBoxClass::RenderSphere()
+{
+	vector3 v3Color = REGREEN;
+	if (true == m_isColliding)
+		v3Color = RERED;
 
+	m_pMeshMngr->AddCubeToRenderList(
+		m_m4ToWorld *
+		glm::translate(m_v3CenterLocal) *
+		glm::scale(m_v3Size),
+		v3Color, WIRE);
+
+	if (m_pNonAligned != nullptr) m_pNonAligned->RenderSphere();
+}
 MyBoundingBoxClass::MyBoundingBoxClass(std::vector<vector3> vertexList, bool orientable)
 {
 	m_bOrientable = orientable;

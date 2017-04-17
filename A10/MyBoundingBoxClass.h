@@ -5,6 +5,7 @@ class MyBoundingBoxClass
 {
 private:
 	bool m_bOrientable = true;
+	bool m_isColliding = false;
 	MyBoundingBoxClass* m_pNonAligned = nullptr;
 	float m_fRadius = 0.0f; //radius of the sphere
 	vector3 m_v3CenterLocal = vector3(0.0f); //center of the sphere in local space
@@ -19,7 +20,8 @@ private:
 	vector3 m_v3MaxG;
 	vector3 m_v3MinG;
 	vector3 m_v3SizeG;
-public:
+public:void
+	SetColliding(bool input);
 	/*
 	Sets Center of the sphere in local space
 	*/
@@ -73,4 +75,6 @@ public:
 	Will check the collision with another object
 	*/
 	bool IsColliding(MyBoundingBoxClass* a_other);
+
+	void RenderSphere();
 };

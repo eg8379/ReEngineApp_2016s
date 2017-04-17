@@ -37,6 +37,7 @@ void MyBoundingObjectClass::SetModelMatrix(matrix4 toWorld)
 	if (toWorld == m_WorldTransform) return;
 	m_WorldTransform = toWorld;
 	m_Box->SetModelMatrix(toWorld);
+	m_Sphere->SetModelMatrix(toWorld);
 }
 
 matrix4 MyBoundingObjectClass::GetModelMatrix()
@@ -65,18 +66,25 @@ void MyBoundingObjectClass::Render()
 	if (m_Colliding)
 		v3Color = m_HitColor;
 
-	m_pMeshMngr->AddCubeToRenderList(
-		glm::translate(GetGlobalCenter()) *
+	/*m_pMeshMngr->AddCubeToRenderList(
+		m_WorldTransform *
+		glm::translate(m_LocalCenter) *
 		glm::scale(GetGlobalBoxMaximum()-GetGlobalBoxMinimum()),
 		v3Color, WIRE);
 
 	m_pMeshMngr->AddSphereToRenderList(
-		glm::translate(GetGlobalCenter()) *
-		glm::scale(vector3(GetGlobalBoxMaximum() - GetGlobalBoxMinimum())), v3Color, WIRE);
+		m_WorldTransform *
+		glm::translate(m_LocalCenter) *
+		glm::scale(vector3(GetGlobalBoxMaximum() - GetGlobalBoxMinimum())), v3Color, WIRE);*/
+
+	m_Box->RenderSphere();
+	m_Sphere->RenderSphere();
 }
 
 void MyBoundingObjectClass::SetColliding(bool colliding)
 {
+	m_Box->SetColliding(colliding);
+	m_Sphere->SetColliding(colliding);
 	m_Colliding = colliding;
 }
 

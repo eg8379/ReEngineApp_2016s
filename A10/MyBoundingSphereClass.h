@@ -5,6 +5,7 @@ class MyBoundingSphereClass
 {
 private:
 	float m_fRadius = 0.0f; //radius of the sphere
+	float m_isColliding = false;
 	vector3 m_v3CenterLocal = vector3(0.0f); //center of the sphere in local space
 	vector3 m_v3CenterGlobal = vector3(0.0f); //center of the sphere in global space
 	matrix4 m_m4ToWorld = IDENTITY_M4; //matrix that takes you from local to global space
@@ -13,6 +14,7 @@ public:
 	/*
 	Sets Center of the sphere in local space
 	*/
+	void MyBoundingSphereClass::SetColliding(bool input);
 	void SetCenterLocal(vector3 input);
 	/*
 	Sets Center of the sphere in global space
@@ -52,4 +54,6 @@ public:
 	Will check the collision with another object
 	*/
 	bool IsColliding(MyBoundingSphereClass* a_other);
+
+	void RenderSphere();
 };
