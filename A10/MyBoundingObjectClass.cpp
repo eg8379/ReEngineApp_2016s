@@ -4,7 +4,7 @@ MyBoundingObjectClass::MyBoundingObjectClass(std::vector<vector3> verticies)
 {
 	m_pMeshMngr = MeshManagerSingleton::GetInstance();
 	m_Box = new MyBoundingBoxClass(verticies);
-	m_Sphere = new MyBoundingSphereClass(m_Box->GetVerticies());
+	m_Sphere = new MyBoundingSphereClass(m_Box->GetReorientedBox()->GetVerticies());
 }
 
 MyBoundingObjectClass::~MyBoundingObjectClass()
@@ -37,7 +37,10 @@ void MyBoundingObjectClass::SetModelMatrix(matrix4 toWorld)
 	if (toWorld == m_WorldTransform) return;
 	m_WorldTransform = toWorld;
 	m_Box->SetModelMatrix(toWorld);
-	m_Sphere->SetModelMatrix(toWorld);
+
+	delete m_Sphere;
+	m_Sphere = new MyBoundingSphereClass(m_Box->GetReorientedBox()->GetVerticies());
+	//m_Sphere->SetModelMatrix(toWorld);
 }
 
 matrix4 MyBoundingObjectClass::GetModelMatrix()

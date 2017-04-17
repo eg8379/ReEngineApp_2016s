@@ -35,6 +35,7 @@ public:void
 	*/
 	void SetRadius(float input);
 
+	MyBoundingBoxClass* GetReorientedBox();
 	/*
 	Gets Box verticies
 	*/

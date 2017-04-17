@@ -13,6 +13,11 @@ void MyBoundingBoxClass::SetColliding(bool input) {
 	m_isColliding = input;
 	if (m_bOrientable) m_pNonAligned->SetColliding(input);
 }
+MyBoundingBoxClass * MyBoundingBoxClass::GetReorientedBox()
+{
+	if (m_bOrientable) return m_pNonAligned;
+	return this;
+}
 void MyBoundingBoxClass::RenderSphere()
 {
 	vector3 v3Color = REGREEN;
