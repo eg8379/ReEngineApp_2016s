@@ -27,6 +27,10 @@ void MyBoundingBoxClass::RenderBox()
 
 	if (m_pNonAligned != nullptr) m_pNonAligned->RenderBox();
 }
+MyBoundingBoxClass * MyBoundingBoxClass::GetReoriented()
+{
+	return (m_bOrientable ? m_pNonAligned : this);
+}
 MyBoundingBoxClass::MyBoundingBoxClass(std::vector<vector3> vertexList, bool orientable)
 {
 	m_bOrientable = orientable;
