@@ -15,7 +15,7 @@ void BoManager::checkColls()
 	}
 	for (std::map<String, MyBoundingObjectClass*>::iterator bo0 = m_boMap.begin(); bo0 != m_boMap.end(); ++bo0)
 	{
-		for (std::map<String, MyBoundingObjectClass*>::iterator bo1 = bo0; bo1 != m_boMap.end(); ++bo1)
+		for (std::map<String, MyBoundingObjectClass*>::iterator bo1 = m_boMap.begin(); bo1 != m_boMap.end(); ++bo1)
 		{
 			if (bo0 != bo1)
 				bo0->second->CheckCollisions(bo1->second);

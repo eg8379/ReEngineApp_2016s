@@ -81,12 +81,12 @@ void MyBoundingObjectClass::Render()
 	m_Sphere->RenderSphere();
 }
 
-//void MyBoundingObjectClass::SetColliding(bool colliding)
-//{
-//	m_Box->SetColliding(colliding);
-//	m_Sphere->SetColliding(colliding);
-//	m_Colliding = colliding;
-//}
+void MyBoundingObjectClass::SetColliding(bool colliding)
+{
+	m_Box->SetColliding(colliding);
+	m_Sphere->SetColliding(colliding);
+	m_Colliding = colliding;
+}
 
 void MyBoundingObjectClass::CheckCollisions(MyBoundingObjectClass* other)
 {

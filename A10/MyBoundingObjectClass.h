@@ -55,7 +55,7 @@ public:
 	MyBoundingBoxClass* GetBox();
 
 	void Render();
-
+		
 	void SetColliding(bool colliding);
 	void CheckCollisions(MyBoundingObjectClass* other);
 };
