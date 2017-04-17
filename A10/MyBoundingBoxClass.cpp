@@ -13,11 +13,11 @@ void MyBoundingBoxClass::SetColliding(bool input) {
 	m_isColliding = input;
 	if (m_bOrientable) m_pNonAligned->SetColliding(input);
 }
-void MyBoundingBoxClass::RenderSphere()
+void MyBoundingBoxClass::RenderBox()
 {
 	vector3 v3Color = REGREEN;
 	if (true == m_isColliding)
-		v3Color = RERED;
+		v3Color = REBLUE;
 
 	m_pMeshMngr->AddCubeToRenderList(
 		m_m4ToWorld *
@@ -25,7 +25,7 @@ void MyBoundingBoxClass::RenderSphere()
 		glm::scale(m_v3Size),
 		v3Color, WIRE);
 
-	if (m_pNonAligned != nullptr) m_pNonAligned->RenderSphere();
+	if (m_pNonAligned != nullptr) m_pNonAligned->RenderBox();
 }
 MyBoundingBoxClass::MyBoundingBoxClass(std::vector<vector3> vertexList, bool orientable)
 {

@@ -76,5 +76,5 @@ public:void
 	*/
 	bool IsColliding(MyBoundingBoxClass* a_other);
 
-	void RenderSphere();
+	void RenderBox();
 };

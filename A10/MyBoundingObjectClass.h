@@ -56,8 +56,8 @@ public:
 
 	void Render();
 
-	void SetColliding(bool colliding);
-	bool IsColliding(MyBoundingObjectClass* other);
+	//void SetColliding(bool colliding);
+	void CheckCollisions(MyBoundingObjectClass* other);
 	
 	
 

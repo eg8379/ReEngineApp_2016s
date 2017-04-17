@@ -17,11 +17,8 @@ void BoManager::checkColls()
 	{
 		for (std::map<String, MyBoundingObjectClass*>::iterator bo1 = bo0; bo1 != m_boMap.end(); ++bo1)
 		{
-			if (bo0->second->IsColliding(bo1->second))
-			{
-				bo0->second->SetColliding(true);
-				bo1->second->SetColliding(true);
-			}
+			if (bo0 != bo1)
+				bo0->second->CheckCollisions(bo1->second);
 		}
 	}
 }

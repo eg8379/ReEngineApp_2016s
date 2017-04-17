@@ -77,18 +77,27 @@ void MyBoundingObjectClass::Render()
 		glm::translate(m_LocalCenter) *
 		glm::scale(vector3(GetGlobalBoxMaximum() - GetGlobalBoxMinimum())), v3Color, WIRE);*/
 
-	m_Box->RenderSphere();
+	m_Box->RenderBox();
 	m_Sphere->RenderSphere();
 }
 
-void MyBoundingObjectClass::SetColliding(bool colliding)
-{
-	m_Box->SetColliding(colliding);
-	m_Sphere->SetColliding(colliding);
-	m_Colliding = colliding;
-}
+//void MyBoundingObjectClass::SetColliding(bool colliding)
+//{
+//	m_Box->SetColliding(colliding);
+//	m_Sphere->SetColliding(colliding);
+//	m_Colliding = colliding;
+//}
 
-bool MyBoundingObjectClass::IsColliding(MyBoundingObjectClass* other)
+void MyBoundingObjectClass::CheckCollisions(MyBoundingObjectClass* other)
 {
-	return m_Sphere->IsColliding(other->GetSphere()) && m_Box->IsColliding(other->GetBox());
+	if (m_Sphere->IsColliding(other->GetSphere()))
+	{
+		m_Sphere->SetColliding(true);
+		other->m_Sphere->SetColliding(true);
+	}
+	if (m_Box->IsColliding(other->GetBox()))
+	{
+		m_Box->SetColliding(true);
+		other->m_Box->SetColliding(true);
+	}
 }
