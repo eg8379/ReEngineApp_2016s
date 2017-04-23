@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{13FA2754-46C1-49D8-B9A4-1DC856801931}</ProjectGuid>
+    <ProjectGuid>{470F66AA-3040-445F-86BD-12F63CC51B17}</ProjectGuid>
     <RootNamespace>A10s_BoundingObjectSingleton</RootNamespace>
-    <ProjectName>A10s_BoundingObjectSingleton_DEMO</ProjectName>
+    <ProjectName>A11_SAT</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
