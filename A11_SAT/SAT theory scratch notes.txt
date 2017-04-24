@@ -35,7 +35,7 @@ how to SAT
 
 
 
--
+-do the same for the other box if a collision isn't found immediately
 
 vector3 minLocal;
 vector3 maxLocal;
@@ -91,4 +91,9 @@ for(int i = 0; i < otherBoxVerticies.size; i++)
 		break;
 	}
 }
+if(allCollide)
+{
+	//test other box
+}
+
 return allCollide;
