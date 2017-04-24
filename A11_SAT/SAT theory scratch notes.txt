@@ -1,0 +1,94 @@
+how to SAT
+
+-Get global verticies of oriented bounding box
+-take local min and local max points from box (except in global coordinates)
+(the * ones)
+*--.
+|\ |\
+| .--.
+| || |
+.-|. |
+ \| \|
+  .--*
+  
+-make normal vectors for planes by taking the 3 neighbor points in different combinations
+	-do for both
+	shortcut: normals are just the negative vector from * to their neighbor .s
+	other shortcut: neighbor points are combinations of min and max xyz in local coordinates converted to global
+		(where min normal neighbors have 1 component from max and max have 1 from min)
+			
+			minNormals
+			mmM
+			mMm
+			Mmm
+			maxNormals
+			MMm
+			MmM
+			mMM
+			
+			dont forget to negate all of them
+			
+-dot product all normal vectors with difference of position vector from * to other boxes' verticies
+	-if all positive, plane does not collide with other box
+	-if any dot products are negative, collision on that plane
+		-if all products have one negative, colliding boxes
+
+
+
+-
+
+vector3 minLocal;
+vector3 maxLocal;
+
+std::vector<vector3> minNormals;
+std::vector<vector3> maxNormals;
+
+minNormals.push_back(vector3(-min.x,-min.y,-max.z));
+minNormals.push_back(vector3(-min.x,-max.y,-min.z));
+minNormals.push_back(vector3(-max.x,-min.y,-min.z));
+
+maxNormals.push_back(vector3(-max.x,-max.y,-min.z));
+maxNormals.push_back(vector3(-max.x,-min.y,-max.z));
+maxNormals.push_back(vector3(-min.x,-max.y,-max.z));
+
+for(int i = 0; i < minNormals.size; i++)
+{
+	//convert minNormals to global coordinates.
+}
+for(int i = 0; i < maxNormals.size; i++)
+{
+	//convert maxNormals to global coordinates.
+}
+
+vector3 minGlobal = //convert minLocal to global coordinates.
+vector3 maxGlobal = //convert maxLocal to global coordinates.
+
+std::vector<vector3> otherBoxVerticies;
+
+bool allCollide = false;
+for(int i = 0; i < otherBoxVerticies.size; i++)
+{
+	bool anyMiss = false;
+	for(int j = 0; j < minNormals.size; i++)
+	{
+		if(dot(minNormals[j],otherBoxVerticies[i]-minGlobal) > 0)
+		{
+			anyMiss = true; //this vertex does not collide with every plane. skip it.
+			break;
+		}
+	}
+	if (anyMiss) continue;
+	for(int j = 0; j < maxNormals.size; i++)
+	{
+		if(dot(maxNormals[j],otherBoxVerticies[i]-maxGlobal) > 0)
+		{
+			anyMiss = true; //this vertex does not collide with every plane. skip it.
+		}
+	}
+	if(!anyMiss)
+	{
+		allCollide = true; // found a vertex that collides with all planes. Collision Detected.
+		break;
+	}
+}
+return allCollide;
