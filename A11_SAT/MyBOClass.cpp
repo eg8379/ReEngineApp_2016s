@@ -235,5 +235,91 @@ bool MyBOClass::IsColliding(MyBOClass* const a_pOther)
 	else if (m_v3MinG.z > a_pOther->m_v3MaxG.z)
 		return false;
 
-	return true;
+	// SAT Test
+	return SatTest(a_pOther);
+}
+
+// Private helper function
+bool MyBOClass::SatTest(MyBOClass* other)
+{
+	// if either is colliding then return true
+	return (this->SatForward(other)) || (other->SatForward(this)); // check A to B then B to A
+}
+
+// Helper function to get the vertices of the second object easier
+std::vector<vector3> MyBOClass::GetVertices()
+{
+	std::vector<vector3> v3Corner;
+	v3Corner.push_back(vector3(m_v3Min.x, m_v3Min.y, m_v3Min.z));
+	v3Corner.push_back(vector3(m_v3Max.x, m_v3Min.y, m_v3Min.z));
+	v3Corner.push_back(vector3(m_v3Min.x, m_v3Max.y, m_v3Min.z));
+	v3Corner.push_back(vector3(m_v3Max.x, m_v3Max.y, m_v3Min.z));
+
+	v3Corner.push_back(vector3(m_v3Min.x, m_v3Min.y, m_v3Max.z));
+	v3Corner.push_back(vector3(m_v3Max.x, m_v3Min.y, m_v3Max.z));
+	v3Corner.push_back(vector3(m_v3Min.x, m_v3Max.y, m_v3Max.z));
+	v3Corner.push_back(vector3(m_v3Max.x, m_v3Max.y, m_v3Max.z));
+
+	//Get vectors in global space
+	for (uint nVertex = 0; nVertex < 8; nVertex++)
+	{
+		v3Corner[nVertex] = vector3(m_m4ToWorld * vector4(v3Corner[nVertex], 1.0f));
+	}
+	return v3Corner;
+}
+
+bool MyBOClass::SatForward(MyBOClass* other)
+{
+	const int SIZE = 3;
+	std::vector<vector3> minNormals;
+	std::vector<vector3> maxNormals;
+
+	// Using the local coordinates means we just need to negate each vector
+	minNormals.push_back(vector3(0.f, 0.f, -m_v3Max.z)); // min XY plane
+	minNormals.push_back(vector3(0.f, -m_v3Max.y, 0.f));  // min XZ plane
+	minNormals.push_back(vector3(-m_v3Max.x, 0.f, 0.f)); // min YZ plane
+
+	maxNormals.push_back(vector3(0.f, 0.f, -m_v3Min.z)); // max XY plane
+	maxNormals.push_back(vector3(0.f, -m_v3Min.y, 0.f)); // max XZ plane 
+	maxNormals.push_back(vector3(-m_v3Min.x, 0.f, 0.f)); // max YZ plane
+
+	for (int i = 0; i < SIZE; i++) // Convert to global coordiantes
+	{
+		// vector ends in zero because these are normals and not points
+		minNormals[i] = vector3(m_m4ToWorld * vector4(minNormals[i], 0.0f));
+		maxNormals[i] = vector3(m_m4ToWorld * vector4(maxNormals[i], 0.0f));
+	}
+
+	std::vector<vector3> otherBoxVertices = other->GetVertices(); // getting the vertices of the second object
+
+	bool allCollide = false;
+	// getting the coordinates for the local and not the realigned
+	vector3 minG = vector3(m_m4ToWorld * vector4(m_v3Min, 1.0f));
+	vector3 maxG = vector3(m_m4ToWorld * vector4(m_v3Max, 1.0f));
+	vector3 direction = GetCenterGlobal()-other->GetCenterGlobal();
+	for (int i = 0; i < otherBoxVertices.size(); i++)
+	{
+		bool anyMiss = false;
+		for (int j = 0; j < SIZE; j++)
+		{
+			//first dot filters out false-negative planes. second dot tests for collision.
+			if (glm::dot(direction,minNormals[j]) > 0 && glm::dot(minNormals[j], otherBoxVertices[i] - minG) > 0)
+			{
+				anyMiss = true; //this vertex does not collide with every plane. skip it.
+			}
+			if (glm::dot(direction, maxNormals[j]) > 0 && glm::dot(maxNormals[j], otherBoxVertices[i] - maxG) > 0)
+			{
+				anyMiss = true; //this vertex does not collide with every plane. skip it.
+			}
+			if (anyMiss)
+				break;
+		}
+		if (!anyMiss)
+		{
+			allCollide = true; // found a vertex that collides with all planes. Collision Detected.
+			break;
+		}
+	}
+
+	return allCollide;
 }

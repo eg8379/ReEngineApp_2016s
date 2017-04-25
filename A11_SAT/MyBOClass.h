@@ -158,6 +158,9 @@ public:
 	*/
 	void DisplayReAlligned(vector3 a_v3Color = REDEFAULT);
 
+	bool SatTest(MyBOClass* other);
+
+	std::vector<vector3> GetVertices();
 private:
 	/*
 	USAGE: Deallocates member fields
@@ -171,6 +174,8 @@ private:
 	OUTPUT: ---
 	*/
 	void Init(void);
+
+	bool SatForward(MyBOClass* b1);
 };
 
 #endif //__MYBOCLASS_H__
