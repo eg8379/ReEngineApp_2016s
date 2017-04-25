@@ -242,6 +242,7 @@ bool MyBOClass::IsColliding(MyBOClass* const a_pOther)
 // Private helper function
 bool MyBOClass::SatTest(MyBOClass* other)
 {
+	if (this->GetCenterGlobal() == other->GetCenterGlobal()) return true;
 	// if either is colliding then return true
 	return (this->SatForward(other)) || (other->SatForward(this)); // check A to B then B to A
 }
